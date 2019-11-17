@@ -7,6 +7,8 @@ const {CalculaEntrega} = require('../horaEntregaCalc');
 //ADD MODELS
 const PedidosModel = require('../models/Pedidos');
 //ADD MIDDELWARES
+const compReservasMiddleware = require('../middlewares/compReservasMiddleware');
+
 
 //GET PEDIDO USER
 router.get("/:id", function (req, res) {
@@ -19,7 +21,7 @@ router.get("/:id", function (req, res) {
 });
 
 //POST USER PEDIDO
-router.post("/:id", async (req, res) => {
+router.post("/:id", compReservasMiddleware, async (req, res) => {
     try {
         const pedido = await new PedidosModel({
             user_id: req.params.id,
