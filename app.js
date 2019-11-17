@@ -17,7 +17,8 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 const moviesRouter = require('./routes/movies');
-const generosRouter = require('./routes/generos');
+const pedidosRouter = require('./routes/pedidos');
+// const generosRouter = require('./routes/generos');
 
 
 
@@ -63,7 +64,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/movies', moviesRouter);
-// app.use('/generos', generosRouter);
+app.use('/pedidos', pedidosRouter);
 
 //ERROR
 app.use((req, res, next)=>{
