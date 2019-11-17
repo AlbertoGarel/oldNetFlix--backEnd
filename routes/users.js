@@ -5,6 +5,7 @@ var router = express.Router();
 const UserModel = require('../models/User');
 //ADD MIDDELWARES
 const compruebaPassword = require('../middlewares/compruebaPassword');
+const compruebaUser = require('../middlewares/compruebauser');
 
 /* GET USERS LISTING */
 router.get('/', (req, res) => {
@@ -34,24 +35,34 @@ router.patch('/changename/:id', compruebaPassword, (req, res) => {
         username: req.body.username
     }, {new: true, useFindAndModify: false})
         .then(user => res.send('Nombre de usuario cambiado correctamente'))
-        .catch(error =>{
-          console.log(error);
-          res.send('Error al cambiar nombre de usuario.')
+        .catch(error => {
+            console.log(error);
+            res.send('Error al cambiar nombre de usuario.')
         })
 });
 
 /*PATCH PASSWORD USER*/
 router.patch('/changepass/:id', compruebaPassword, (req, res) => {
-  UserModel.findByIdAndUpdate(req.params.id, {
-    password: req.body.password
-  }, {new: true, useFindAndModify: false})
-      .then(user => res.send('Password de usuario cambiado correctamente'))
-      .catch(error =>{
-        console.log(error);
-        res.send('Error al cambiar password de usuario.')
-      })
+    UserModel.findByIdAndUpdate(req.params.id, {
+        password: req.body.password
+    }, {new: true, useFindAndModify: false})
+        .then(user => res.send('Password de usuario cambiado correctamente'))
+        .catch(error => {
+            console.log(error);
+            res.send('Error al cambiar password de usuario.')
+        })
 });
 
 /*DELETE USER*/
+
+/*RECUPERA PASSWORD*/
+router.get('/recupass/:id', compruebaUser, (req, res,) => {
+    UserModel.findOne({_id: req.params.id})
+        .then(user => res.send(user.password))
+        .catch(err => {
+            console.log(err);
+            res.send('Error al recuperar password.')
+        })
+});
 
 module.exports = router;
