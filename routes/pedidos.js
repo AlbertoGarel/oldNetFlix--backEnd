@@ -5,9 +5,18 @@ var router = express.Router();
 //add tools
 const {CalculaEntrega} = require('../horaEntregaCalc');
 //ADD MODELS
-const UserModel = require('../models/User');
 const PedidosModel = require('../models/Pedidos');
 //ADD MIDDELWARES
+
+//GET PEDIDO USER
+router.get("/:id", function (req, res) {
+    PedidosModel.findOne({user_id:req.params.id})
+        .then(pedido => res.send(pedido))
+        .catch(err=>{
+            console.log('err');
+            res.send('Error al mostrar pedidos. Intentelo más tarde')
+        })
+});
 
 //POST USER PEDIDO
 router.post("/:id", async (req, res) => {
