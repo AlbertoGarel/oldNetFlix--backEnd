@@ -28,8 +28,8 @@ router.post('/register', async (req, res) => {
     }
 });
 
-/*PATCH USER*/
-router.patch('/changepass/:id', compruebaPassword, (req, res) => {
+/*PATCH NAMEUSER*/
+router.patch('/changename/:id', compruebaPassword, (req, res) => {
     UserModel.findByIdAndUpdate(req.params.id, {
         username: req.body.username
     }, {new: true, useFindAndModify: false})
@@ -38,6 +38,18 @@ router.patch('/changepass/:id', compruebaPassword, (req, res) => {
           console.log(error);
           res.send('Error al cambiar nombre de usuario.')
         })
+});
+
+/*PATCH PASSWORD USER*/
+router.patch('/changepass/:id', compruebaPassword, (req, res) => {
+  UserModel.findByIdAndUpdate(req.params.id, {
+    password: req.body.password
+  }, {new: true, useFindAndModify: false})
+      .then(user => res.send('Password de usuario cambiado correctamente'))
+      .catch(error =>{
+        console.log(error);
+        res.send('Error al cambiar password de usuario.')
+      })
 });
 
 /*DELETE USER*/
