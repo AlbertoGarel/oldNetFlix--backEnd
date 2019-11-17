@@ -12,6 +12,7 @@ router.get('/', (req, res) => {
 
 /*POST REGISTER USER*/
 router.post('/register', async (req, res) => {
+  // res.send(req.body.username + '-' + req.body.password)
   try {
     const user = await new UserModel({
       username: req.body.username,
@@ -20,6 +21,7 @@ router.post('/register', async (req, res) => {
     res.send(user)
   } catch (error) {
     console.log(error);
+    res.send(`"${req.body.username}" no está disponible como nombre de Usuario`)
   }
 });
 
