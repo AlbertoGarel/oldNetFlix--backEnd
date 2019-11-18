@@ -15,6 +15,19 @@ const tokenMiddleware = require('../middlewares/tokenMiddleware');
 //         .then(users => res.send(users))
 //         .catch(error => console.log(error))
 // });
+
+//POST perfil
+router.post('/me', tokenMiddleware.ensureAuthenticated,(req, res,) => {
+    UserModel.findOne({
+        username:req.body.username,
+        password:req.body.password
+    })
+        .then(user => res.send(user))
+        .catch(err => {
+            console.log(err);
+            res.send('Error al registrarse.')
+        })
+});
 //POST LOGIN
 router.post('/login', (req, res,) => {
     UserModel.findOne({
