@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+const service = require('../services');
 // const axios = require('axios');
 
 //add tools
@@ -8,20 +9,20 @@ const {CalculaEntrega} = require('../horaEntregaCalc');
 const PedidosModel = require('../models/Pedidos');
 //ADD MIDDELWARES
 const compReservasMiddleware = require('../middlewares/compReservasMiddleware');
-
+const tokenMiddleware = require('../middlewares/tokenMiddleware');
 
 //GET PEDIDO USER
-router.get("/:id", function (req, res) {
-    PedidosModel.findOne({user_id:req.params.id})
+router.get("/:id", tokenMiddleware.ensureAuthenticated, function (req, res) {
+    PedidosModel.findOne({user_id: req.params.id})
         .then(pedido => res.send(pedido))
-        .catch(err=>{
+        .catch(err => {
             console.log('err');
             res.send('Error al mostrar pedidos. Intentelo más tarde')
         })
 });
 
 //POST USER PEDIDO
-router.post("/:id", compReservasMiddleware, async (req, res) => {
+router.post("/:id", tokenMiddleware.ensureAuthenticated, compReservasMiddleware, async (req, res) => {
     try {
         const pedido = await new PedidosModel({
             user_id: req.params.id,
