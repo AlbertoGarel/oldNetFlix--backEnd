@@ -1,6 +1,6 @@
-var jwt = require('jwt-simple');
-var moment = require('moment');
-var config = require('../config');
+const jwt = require('jwt-simple');
+const moment = require('moment');
+const config = require('../config');
 
 exports.ensureAuthenticated = function(req, res, next) {
     if(!req.headers.authorization) {
@@ -9,8 +9,8 @@ exports.ensureAuthenticated = function(req, res, next) {
             .send({message: "Tu petición no tiene cabecera de autorización"});
     }
 
-    var token = req.headers.authorization.split(" ")[1];
-    var payload = jwt.decode(token, config.TOKEN_SECRET);
+    const token = req.headers.authorization.split(" ")[1];
+    const payload = jwt.decode(token, config.TOKEN_SECRET);
 
     if(payload.exp <= moment().unix()) {
         return res
