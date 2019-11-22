@@ -72,7 +72,7 @@ router.get("/generos/:gender", function (req, res) {
 
 //GET MOVIE BY TITLE
 router.get('/titulos/:title', (req, res) => {
-    let regex = new RegExp(".*." + req.params.title + ".*.", "gi");
+    let regex = new RegExp(req.params.title, "gi");
     MovieModel.find({title: regex})
         .then(movie =>{
             if(movie.length === 0 || movie === null){

@@ -17,10 +17,10 @@ const tokenMiddleware = require('../middlewares/tokenMiddleware');
 // });
 
 //POST perfil
-router.post('/me', tokenMiddleware.ensureAuthenticated,(req, res,) => {
+router.post('/me', tokenMiddleware.ensureAuthenticated, (req, res,) => {
     UserModel.findOne({
-        username:req.body.username,
-        password:req.body.password
+        username: req.body.username,
+        password: req.body.password
     })
         .then(user => res.send(user))
         .catch(err => {
@@ -31,14 +31,50 @@ router.post('/me', tokenMiddleware.ensureAuthenticated,(req, res,) => {
 //POST LOGIN
 router.post('/login', (req, res,) => {
     UserModel.findOne({
-        username:req.body.username,
-        password:req.body.password
+        username: req.body.username,
+        // password:req.body.password
     })
-        .then(user => res.send({token: service.createToken(user)}))
+        .then(user => {
+            user.comparePass(req.body.password)
+                .then(isMatch => {
+                    console.log('isMatch', isMatch);
+                    if (!isMatch) res.send('Contraseña incorrecta');
+
+                    // console.log('token', token);
+                    // console.log('tokenlength', user.tokens.length);
+                    let token = '';
+                    if (user.tokens.length === 3) {
+                        res.send('Ya tienes más de tres sesiones abiertas')
+                    } else {
+                        token = service.createToken(user);
+                        UserModel.findByIdAndUpdate({_id: user._id}, {$push: {tokens: token}})
+                            .then(resp => res.send(user))
+                    }
+
+                    // res.send(token)
+                });
+            // res.send({token: service.createToken(user._id)})//pasar al cuerpo de promesa
+        })
         .catch(err => {
             console.log(err);
-            res.send('Error al registrarse.')
+            res.send('Error en el Login. Compruebe los campos.')
         })
+});
+
+//LOGOUT
+router.patch('/logout', tokenMiddleware.ensureAuthenticated, async (req, res) => {
+    try{
+        let user = await UserModel.findOneAndUpdate({tokens:req.headers.authorization.split(' ')[1]},
+            {
+                $pull: {
+                    tokens: req.headers.authorization.split(' ')[1]
+                }
+            });
+        if(!user) res.send('ya se finalizó sesión con este token');
+        res.send(`Hasta pronto ${user.username }`)
+    }catch{
+        res.status(500).send('error al realizar la operación');
+    }
 });
 
 /*POST REGISTER USER*/
@@ -49,8 +85,7 @@ router.post('/register', async (req, res) => {
             username: req.body.username,
             password: req.body.password
         }).save();
-        // res.send(user)
-        res.send({token: service.createToken(user), user});
+        res.send('Registrado con éxito');
     } catch (error) {
         console.log(error);
         res.send(`"${req.body.username}" no está disponible como nombre de Usuario`)

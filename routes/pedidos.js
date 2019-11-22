@@ -33,7 +33,7 @@ router.post("/:id", tokenMiddleware.ensureAuthenticated, compReservasMiddleware,
         res.send(pedido)
     } catch (error) {
         console.log(error);
-        res.send(`no se ha podido reservar la película`)
+        res.send(`No se ha podido reservar la película. Intentelo más tarde.`)
     }
 });
 
