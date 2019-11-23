@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const service = require('../services');
+const bcrypt = require('bcryptjs');
+const salt = bcrypt.genSaltSync(10);
 
 //ADD MODELS
 const UserModel = require('../models/User');
@@ -50,7 +52,7 @@ router.post('/login', (req, res,) => {
                         UserModel.findByIdAndUpdate({_id: user._id}
                             , {$push: {tokens: token}}
                             , {new: true, useFindAndModify: false})
-                            .then(user => res.send({token:user.tokens[user.tokens.length -1],user}))
+                            .then(user => res.send({token: user.tokens[user.tokens.length - 1], user}))
                     }
                 });
         })
@@ -91,10 +93,10 @@ router.post('/register', async (req, res) => {
 });
 
 /*PATCH NAMEUSER*/
-router.patch('/changename/:id', tokenMiddleware.ensureAuthenticated, compruebaUser,(req, res) => {
+router.patch('/changename/:id', tokenMiddleware.ensureAuthenticated, compruebaUser, (req, res) => {
     UserModel.findByIdAndUpdate(req.params.id, {
         username: req.body.username
-    }, {new: true, useFindAndModify: false})
+    }, {useFindAndModify: false})
         .then(user => res.send('Nombre de usuario cambiado correctamente'))
         .catch(error => {
             console.log(error);
@@ -103,17 +105,20 @@ router.patch('/changename/:id', tokenMiddleware.ensureAuthenticated, compruebaUs
 });
 
 /*PATCH PASSWORD USER*/
-router.patch('/changepass/:id', tokenMiddleware.ensureAuthenticated, compruebaPassword, (req, res) => {
+router.patch('/changepass/:id', tokenMiddleware.ensureAuthenticated, compruebaUser, async (req, res) => {
+    let encriptado =  await bcrypt.hash(req.body.password, 10);//encryptamos la contraseña del body. Si no se hace, la actualización se queda en texto plano
+
     UserModel.findByIdAndUpdate(req.params.id, {
-        password: req.body.password
-    }, {new: true, useFindAndModify: false})
-        .then(user => res.send('Password de usuario cambiado correctamente'))
+        password: encriptado//y la pasamos
+    }, {new: true, useFindAndModify: false, runValidators: true})
+        .then(user => {
+                res.send('Password de usuario cambiado correctamente')
+        })
         .catch(error => {
             console.log(error);
             res.send('Error al cambiar password de usuario.')
         })
 });
-
 
 
 /*RECUPERA PASSWORD*/
