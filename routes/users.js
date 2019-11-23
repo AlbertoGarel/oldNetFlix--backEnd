@@ -91,7 +91,7 @@ router.post('/register', async (req, res) => {
 });
 
 /*PATCH NAMEUSER*/
-router.patch('/changename/:id', tokenMiddleware.ensureAuthenticated, (req, res) => {
+router.patch('/changename/:id', tokenMiddleware.ensureAuthenticated, compruebaUser,(req, res) => {
     UserModel.findByIdAndUpdate(req.params.id, {
         username: req.body.username
     }, {new: true, useFindAndModify: false})
@@ -114,7 +114,7 @@ router.patch('/changepass/:id', tokenMiddleware.ensureAuthenticated, compruebaPa
         })
 });
 
-/*DELETE USER*/
+
 
 /*RECUPERA PASSWORD*/
 router.get('/recupass/:id', tokenMiddleware.ensureAuthenticated, compruebaUser, (req, res,) => {
