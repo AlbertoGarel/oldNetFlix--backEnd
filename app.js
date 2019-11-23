@@ -37,7 +37,7 @@ app.use('/pedidos', pedidosRouter);
 
 //ERROR
 app.use((req, res, next)=>{
-    res.send('Error, no tienes acceso o url inexistente');
+    res.send('Error 404, url inexistente');
 });
 
 module.exports = app;

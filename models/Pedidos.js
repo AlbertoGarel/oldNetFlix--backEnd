@@ -2,10 +2,10 @@ const mongoose = require('mongoose');
 
 const PedidosSchema = mongoose.Schema({
 
-    user_id:String,
-    movie_id:Number,
-    fechaEntrega:String,
-    fechaDevolucion:String,
+    user_id: String,
+    movie_id: Number,
+    fechaEntrega: String,
+    fechaDevolucion: String,
 
 });
 
