@@ -93,6 +93,7 @@ router.post('/register', async (req, res) => {
 });
 
 /*PATCH NAMEUSER*/
+//cambia el nombre de usuario
 router.patch('/changename/:id', tokenMiddleware.ensureAuthenticated, compruebaUser, (req, res) => {
     UserModel.findByIdAndUpdate(req.params.id, {
         username: req.body.username
@@ -106,13 +107,13 @@ router.patch('/changename/:id', tokenMiddleware.ensureAuthenticated, compruebaUs
 
 /*PATCH PASSWORD USER*/
 router.patch('/changepass/:id', tokenMiddleware.ensureAuthenticated, compruebaUser, async (req, res) => {
-    let encriptado =  await bcrypt.hash(req.body.password, 10);//encryptamos la contraseña del body. Si no se hace, la actualización se queda en texto plano
+    let encriptado = await bcrypt.hash(req.body.password, 10);//encryptamos la contraseña del body. Si no se hace, la actualización se queda en texto plano
 
     UserModel.findByIdAndUpdate(req.params.id, {
         password: encriptado//y la pasamos
     }, {new: true, useFindAndModify: false, runValidators: true})
         .then(user => {
-                res.send('Password de usuario cambiado correctamente')
+            res.send('Password de usuario cambiado correctamente')
         })
         .catch(error => {
             console.log(error);
@@ -122,9 +123,16 @@ router.patch('/changepass/:id', tokenMiddleware.ensureAuthenticated, compruebaUs
 
 
 /*RECUPERA PASSWORD*/
-router.get('/recupass/:id', tokenMiddleware.ensureAuthenticated, compruebaUser, (req, res,) => {
-    UserModel.findOne({_id: req.params.id})
-        .then(user => res.send(user.password))
+//PARA CAMBIAR LA CONTRASEÑA SE REQUIERE PASS
+router.post('/recupass', async (req, res,) => {
+    let pass = await bcrypt.hash(req.body.password, 10);//bcrypt para la nueva contraseña
+    UserModel.findOneAndUpdate({
+        _id: req.body._id,
+        username: req.body.username
+    }, {password: pass})//actualizamos el password
+        .then(user => {
+            res.send('contraseña cambiada con éxito')
+        })
         .catch(err => {
             console.log(err);
             res.send('Error al recuperar password.')

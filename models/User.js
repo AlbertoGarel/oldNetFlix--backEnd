@@ -17,8 +17,9 @@ UserSchema.methods.toJSON = function (params) {
     delete user.password;
     delete user.__v;
     return user;
-}
+};
 
+//compara
 UserSchema.methods.comparePass = function (password) {
     const user = this;
     // console.log(user);
@@ -40,18 +41,7 @@ UserSchema.pre('save', function (next) {
         });
 });
 
-UserSchema.methods.hashPass = function (password) {
-    bcrypt.hash(user.password, 10).then(hash => {
-        user.password = hash;
-        console.log('user', user);
-        console.log('hash', hash);
-        next();
-    })
-        .catch(err => {
-            console.log(err);
-            res.status(500).send(err)
-        });
-};
+
 
 const UserModel = mongoose.model('user', UserSchema);
 module.exports = UserModel;
