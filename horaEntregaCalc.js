@@ -12,11 +12,11 @@ CalculaDevolucion = (d, fecha) => {
     var aFecha = sFecha.split(sep);//LOS QUITAMOS DEL STRING
     var fecha = aFecha[2]+'/'+aFecha[1]+'/'+aFecha[0];//INVERTIMOS EL ORDEN
     fecha= new Date(fecha);
-    fecha.setDate(fecha.getDate()+parseInt(d));
+    fecha.setDate(fecha.getDate()+parseInt(d));//sumamos los dias y establecemos con set
     var anno=fecha.getFullYear();
     var mes= fecha.getMonth()+1;
     var dia= fecha.getDate();
-    mes = (mes < 10) ? ("0" + mes) : mes;
+    mes = (mes < 10) ? ("0" + mes) : mes;//si es menor de 10 le ponemos cero delante para mantener dos cifras
     dia = (dia < 10) ? ("0" + dia) : dia;
     var fechaFinal = dia+sep+mes+sep+anno;
     return (fechaFinal);

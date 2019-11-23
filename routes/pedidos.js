@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('jwt-simple');
-const config = require('../config');
+const config = require('../config');//donde guardamos
 
 //ADD TOOLS
 const {CalculaEntrega} = require('../horaEntregaCalc');//SCRIPT PARA CALCULAR FECHA DE REGISTRO Y ENTREGA DE ALQUILER

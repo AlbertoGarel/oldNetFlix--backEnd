@@ -2,12 +2,10 @@ const express = require('express');
 const router = express.Router();
 const service = require('../services');
 const bcrypt = require('bcryptjs');
-const salt = bcrypt.genSaltSync(10);
 
 //ADD MODELS
 const UserModel = require('../models/User');
 //ADD MIDDELWARES
-const compruebaPassword = require('../middlewares/compruebaPassword');
 const compruebaUser = require('../middlewares/compruebauser');
 const tokenMiddleware = require('../middlewares/tokenMiddleware');
 
