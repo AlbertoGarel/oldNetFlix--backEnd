@@ -158,7 +158,23 @@ Crea un alquiler de película si no existe y si existe lo actualiza.
 - Limitado a una película por usuario
 ```
 
+### MIDDLEWARES
+```
+movieIdMidddleware -> Controla que el parámetro de búsqueda sea number. Si no lo es, devolverá status 400 y 
+                      avisará de ello al usuario con un mensaje.
+```
+```
+compReservasMiddleware -> Controla que no exista más de una reserva. Si existe no da paso al controlador.
 
+```
+```
+compruebaUser -> Controla que el usuario sea el correcto antes de realizar la consulta.
+           
+```
+```
+TokenMiddleware -> Control de validez de TOKEN
+
+```
 ## Construido con 🛠️
 
 * [WebStorm](https://www.jetbrains.com/es-es/webstorm/) - IDE para javaScript
