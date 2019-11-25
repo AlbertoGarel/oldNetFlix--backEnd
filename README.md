@@ -77,6 +77,12 @@ Obtiene película por id.
 - No necesita autorización.
 ```
 ```
+GET /movies/generos
+
+Obtiene géneros disponibles con name e id
+- No necesita autorización.
+```
+```
 GET /movies/generos/:gender
 
 Obtiene películas por género
